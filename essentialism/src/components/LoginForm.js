@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { render } from 'react-dom';
 import styled from 'styled-components';
 
-
 import axios from 'axios';
-import FriendsList from "./FriendsList";
 import { axiosWithAuth } from '../utils/axiosWithAuth';
 
 const FormInput = styled.div`
@@ -17,58 +15,46 @@ const LoginForm = props => {
 
   const [credentials, setCredentials] = useState({
 
-    email: '',
+    username: '',
     password: ''
 
   });
 
-// class Login extends React.Component {
-//   constructor() {
-//     super();
-//     this.state = {
-//       isLoading: false,
-//       credentials: {
-//         username: '',
-//         password: ''
-//       }
-//     }
-//   }
 
-  const handleChange = event => {
-          setCredentials( {
-              ...credentials,
-              [event.target.name]: event.target.value
-          })
-          // console.log(this.state.credentials)
+const handleChanges = event => {
+    setCredentials( {
+          ...credentials,
+            [event.target.name]: event.target.value
+          } )
       }
 
-handleSubmit = event => {
+const loginToApp = event => {
     event.preventDefault();
-    this.setState({...this.state, isLoading: true});
-    axiosWithAuth().post('/api/login', this.state.credentials)
+    axiosWithAuth().post('https://bw-essentialism-1.herokuapp.com/api/auth/login', credentials)
     .then(res => {
         console.log(res);
         window.localStorage.setItem('token', res.data.payload);
-        this.setState({...this.state, isLoading: false});
-        this.props.history.push('/protected')
+      props.history.push('/nextpage')
     })
     .catch(err => console.log(err))
-}
+  }
 
 
-render(){
+
+  // once user is logged in create a GET request with the below endpoint
+  // `https://bw-essentialism-1.herokuapp.com/api/essentials/${essentials.id}`
+
+
   return(
     <div>
-      <form onSubmit={this.handleSubmit}>
-        <input name="username" onChange={this.handleChange} />
-        <input name="password" onChange={this.handleChange} />
+      <form onSubmit={loginToApp}>
+        <input name="username" onChange={handleChanges} />
+        <input name="password" onChange={handleChanges} />
         <button>Login</button>
       </form>
-      {this.state.isLoading && <div> Logging In</div>}
     </div>
-
     )
   }
-}
 
-export default Login;
+
+export default LoginForm;

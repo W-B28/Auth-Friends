@@ -34,7 +34,7 @@ function LoginPage() {
 
   const login = member => {
       const newMember = {
-          email: member.email,
+          username: member.username,
           password: member.password
 
       };
